@@ -21,16 +21,15 @@ st.markdown("Just upload our WhatsApp chat file below, and the AI will learn my 
 # --- 2. API Key and Model Setup ---
 # This part sets up the connection to Google's AI
 try:
-    # FOR LOCAL TESTING: Paste your key directly as a string
-    
-    api_key = st.secrets["AIzaSyA9JY3Th4tDq1D0G09Osr_sPRFzi-FBH8c"]  # <-- YOUR KEY GOES HERE
+    # This securely gets the API key from the Streamlit Cloud secrets manager
+    api_key = st.secrets["GOOGLE_API_KEY"]
 
     genai.configure(api_key=api_key)
     # This selects the latest powerful Gemini model
     model = genai.GenerativeModel('gemini-1.5-pro-latest')
 except Exception as e:
-    # Display a more informative error
-    st.error(f"🚨 An error occurred. Please check your API Key. Error: {e}", icon="🚨")
+    # This error shows if the secret is not set correctly on the website
+    st.error(f"🚨 API Key not found. Did you set it correctly in the app settings on Streamlit Cloud?", icon="🚨")
     st.stop()
 # --- 3. IMPORTANT: User Name Configuration ---
 # You MUST edit these two lines to match the names in your .txt file
@@ -130,4 +129,5 @@ if uploaded_file:
         # Save the AI's reply to the session history
         st.session_state.messages.append({"role": "assistant", "content": full_response})
 else:
+
     st.info("Waiting for you to upload our chat file... ⬆️")
